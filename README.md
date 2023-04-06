@@ -8,6 +8,8 @@ To ensure you have all the required software, run the following
 pip install -r requirements.txt
 ```
 
+If you need additional software for the project, add them to this file
+
 ## Data
 
 To download the data (143 Mb) from Dropbox, run the following command
