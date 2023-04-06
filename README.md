@@ -2,15 +2,17 @@
 
 ## Setup
 
-To ensure you have all the required software, run the following
+Create a virtual python environment for this project and install the required python libraries
 
 ```bash
+python3 -m venv .venv 
+source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
 If you need additional python libraries for the project, add them to this file
 
-## Data
+## Download the data
 
 To download the data (143 Mb) from Dropbox, run the following command
 
@@ -26,3 +28,5 @@ data/
 ├── TCGA.HNSC.metadata.txt
 └── TCGA.HNSC.mutations.txt
 ```
+
+## Analyze
