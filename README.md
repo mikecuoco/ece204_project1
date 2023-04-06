@@ -8,7 +8,7 @@ To ensure you have all the required software, run the following
 pip install -r requirements.txt
 ```
 
-If you need additional software for the project, add them to this file
+If you need additional python libraries for the project, add them to this file
 
 ## Data
 
