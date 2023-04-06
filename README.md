@@ -32,4 +32,4 @@ data/
 
 ## Analyze
 
-Create your own `{name}_analysis.ipynb` to analyze the data
+Create your own `{name}_analysis.ipynb` and select the python installation in `.venv` as the kernel to analyze the data
