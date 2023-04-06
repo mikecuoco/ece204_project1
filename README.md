@@ -1,11 +1,11 @@
-# BENG 285/BNFO 285/ECE 204. Statistical Learning in Bioinformatics - Project 1
+# BENG 285/BNFO 285/ECE 204. Statistical Learning in Bioinformatics: Project 1
 
 ## Setup
 
 Create a virtual python environment for this project and install the required python libraries
 
 ```bash
-python3 -m venv .venv 
+python3.9 -m venv .venv # must be python >=3.7,<3.11
 source .venv/bin/activate
 pip install -r requirements.txt
 ```
@@ -30,3 +30,5 @@ data/
 ```
 
 ## Analyze
+
+Play in [analysis.ipynb](./analysis.ipynb) to analyze the data
