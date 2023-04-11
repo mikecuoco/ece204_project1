@@ -30,6 +30,31 @@ data/
 └── TCGA.HNSC.mutations.txt
 ```
 
+## Generate the embedded data
+
+To generate the embedded data, run the following command
+
+```bash
+python embed.py
+```
+
+This will create the following data to the `data` directory.
+
+```bash
+data/
+└── TCGA.HNSC.embedded.h5ad
+```
+
 ## Analyze
 
 Create your own `{name}_analysis.ipynb` and select the python installation in `.venv` as the kernel to analyze the data
+
+To read in the embedded data, use the following code.
+
+```python
+from anndata import read_h5ad
+adata = read_h5ad('data/TCGA.HNSC.embedded.h5ad')
+adata.obsm['pca'] # PCA embedding
+```
+
+[Anndata](https://anndata.readthedocs.io/en/latest/index.html) is a handy library for working with a data matrix and metadata. See [`./explore.ipynb`](./explore.ipynb) for how I used it.
