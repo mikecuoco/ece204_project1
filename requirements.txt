@@ -1,4 +1,5 @@
 pandas
+anndata
 scikit-learn>=1.2
 jupyterlab>=3.0.0
 seaborn>=0.11.1
