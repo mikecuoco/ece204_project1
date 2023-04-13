@@ -5,7 +5,6 @@ __author__ = 'Michael Cuoco'
 import numpy as np
 import pandas as pd
 from anndata import AnnData
-import matplotlib.pyplot as plt
 from sklearn.preprocessing import scale
 
 # import embedding functions
@@ -45,19 +44,20 @@ adata.X_standardized = scale(adata.X_normed, with_mean=True, axis=1)
 # embed data
 # PCA
 print("Running PCA...")
-adata.obsm["pca"] = PCA().fit_transform(adata.X_scaled)
+adata.obsm["pca"] = PCA().fit_transform(adata.X_scaled).astype(np.float32)
 
 # MDS
 print("Running MDS...")
-adata.obsm["mds"] = MDS(normalized_stress='auto').fit_transform(adata.X_standardized)
+adata.obsm["mds"] = MDS(normalized_stress='auto').fit_transform(adata.X_standardized).astype(np.float32)
 
 # t-SNE
 print("Running t-SNE...")
-adata.obsm["tsne"] = TSNE().fit_transform(adata.X_standardized)
+adata.obsm["tsne"] = TSNE().fit_transform(adata.X_standardized).astype(np.float32)
 
 # UMAP
 print("Running UMAP...")
-adata.obsm["umap"] = UMAP().fit_transform(adata.X_standardized)
+adata.obsm["umap"] = UMAP().fit_transform(adata.X_standardized).astype(np.float32)
 
 # save data
+adata._sanitize()
 adata.write_h5ad('data/TCGA.HNSC.embedded.h5ad')
