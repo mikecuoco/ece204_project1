@@ -6,7 +6,7 @@ Clone this repo, create a virtual python environment, and install the required p
 
 ```bash
 git clone https://github.com/mikecuoco/ece204_project1.git
-python3.9 -m venv .venv # must be python >=3.7,<3.11
+python3.9 -m venv .venv # must be python 3.9
 source .venv/bin/activate
 pip install -r requirements.txt
 ```
