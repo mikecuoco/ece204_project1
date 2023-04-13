@@ -33,30 +33,30 @@ adata.var_names = expr.columns
 adata = adata[:, adata.X.sum(axis=0) > 0]
 
 # log(x+1) transform each value in matrix
-adata.X_normed = np.log1p(adata.X)
+adata.obsm['X_normed'] = np.log1p(adata.X)
 
 # scale only, don't center (PCA centers internally)
-adata.X_scaled = scale(adata.X_normed, with_mean=False, axis = 1)
+adata.obsm["X_scaled"] = scale(adata.obsm['X_normed'], with_mean=False, axis = 1)
 
 # scale and center
-adata.X_standardized = scale(adata.X_normed, with_mean=True, axis=1)
+adata.obsm['X_standardized'] = scale(adata.obsm['X_normed'], with_mean=True, axis=1)
 
 # embed data
 # PCA
 print("Running PCA...")
-adata.obsm["pca"] = PCA().fit_transform(adata.X_scaled).astype(np.float32)
+adata.obsm["pca"] = PCA().fit_transform(adata.obsm["X_scaled"]).astype(np.float32)
 
 # MDS
 print("Running MDS...")
-adata.obsm["mds"] = MDS(normalized_stress='auto').fit_transform(adata.X_standardized).astype(np.float32)
+adata.obsm["mds"] = MDS(normalized_stress='auto').fit_transform(adata.obsm['X_standardized']).astype(np.float32)
 
 # t-SNE
 print("Running t-SNE...")
-adata.obsm["tsne"] = TSNE().fit_transform(adata.X_standardized).astype(np.float32)
+adata.obsm["tsne"] = TSNE().fit_transform(adata.obsm['X_standardized']).astype(np.float32)
 
 # UMAP
 print("Running UMAP...")
-adata.obsm["umap"] = UMAP().fit_transform(adata.X_standardized).astype(np.float32)
+adata.obsm["umap"] = UMAP().fit_transform(adata.obsm['X_standardized']).astype(np.float32)
 
 # save data
 adata._sanitize()
