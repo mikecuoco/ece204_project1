@@ -5,7 +5,7 @@ __author__ = 'Michael Cuoco'
 import numpy as np
 import pandas as pd
 from anndata import AnnData
-from sklearn.preprocessing import scale
+from sklearn.preprocessing import StandardScaler
 
 # import embedding functions
 from sklearn.manifold import TSNE, MDS
@@ -15,6 +15,7 @@ from umap import UMAP
 # read expression data, put into AnnData object
 expr = pd.read_csv('data/TCGA.HNSC.expression.txt', sep='\t', header=0, index_col=[0,1])
 meta = pd.read_csv('data/TCGA.HNSC.metadata.txt', sep='\t', header=0, index_col=0)
+meta["tissue_source_site"] = [s.split("-")[1] for s in meta.index.values] 
 
 # add sample_id to metadata, reindex
 meta = (
@@ -36,10 +37,13 @@ adata = adata[:, adata.X.sum(axis=0) > 0]
 adata.obsm['X_normed'] = np.log1p(adata.X)
 
 # scale only, don't center (PCA centers internally)
-adata.obsm["X_scaled"] = scale(adata.obsm['X_normed'], with_mean=False, axis = 1)
+adata.obsm["X_scaled"] = StandardScaler().fit(adata.obsm['X_normed'], with_mean=False)
+
+# scale only, don't center (PCA centers internally)
+adata.obsm["X_centered"] = StandardScaler().fit(adata.obsm['X_normed'], with_std=False)
 
 # scale and center
-adata.obsm['X_standardized'] = scale(adata.obsm['X_normed'], with_mean=True, axis=1)
+adata.obsm['X_standardized'] = StandardScaler().fit(adata.obsm['X_normed'])
 
 # embed data
 # PCA
