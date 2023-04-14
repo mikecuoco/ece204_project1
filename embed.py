@@ -6,7 +6,6 @@ import numpy as np
 import pandas as pd
 from anndata import AnnData
 import scanpy as sc
-from sklearn.preprocessing import StandardScaler
 
 # import embedding functions
 from sklearn.manifold import TSNE, MDS
@@ -40,28 +39,28 @@ sc.pp.filter_genes(adata, min_cells=1)
 
 # log(x+1) transform each value in matrix
 print("Log transforming...")
-sc.pp.log1p(adata)
+adata.obsm["X_log1p"] = sc.pp.log1p(adata, copy=True).X
 
 # scale only, don't center (PCA centers internally)
 print("Scaling for PCA...")
-sc.pp.scale(adata, max_value=10, zero_center=False)
+adata.obsm["X_log1p_scaled"] = sc.pp.scale(adata, max_value=10, zero_center=False, copy=True, obsm="X_log1p").X
 
 # embed data
 # PCA
 print("Running PCA (centers data internally)...")
-adata.obsm["pca"] = PCA().fit_transform(adata.X).astype(np.float32)
+adata.obsm["pca"] = PCA().fit_transform(adata.obsm["X_log1p_scaled"]).astype(np.float32)
 
 # scale and center
 print("Scaling and centering for MDS, t-SNE and UMAP...")
-sc.pp.scale(adata, max_value=10, zero_center=True)
+adata.obsm["X_log1p_standardized"] = sc.pp.scale(adata, max_value=10, zero_center=True, copy=True, obsm="X_log1p").X
 
 # MDS
 print("Running MDS...")
-adata.obsm["mds"] = MDS(normalized_stress='auto').fit_transform(adata.X).astype(np.float32)
+adata.obsm["mds"] = MDS(normalized_stress='auto').fit_transform(adata.obsm["X_log1p_standardized"]).astype(np.float32)
 
 # t-SNE
 print("Running t-SNE...")
-adata.obsm["tsne"] = TSNE().fit_transform(adata.X).astype(np.float32)
+adata.obsm["tsne"] = TSNE().fit_transform(adata.obsm["X_log1p_standardized"]).astype(np.float32)
 
 # UMAP
 print("Running UMAP...")
