@@ -32,6 +32,7 @@ print("Creating AnnData object...")
 adata = AnnData(expr, obs=meta, var=expr.columns.to_frame(name='gene'), dtype=np.float32)
 adata.obs_names = expr.index.get_level_values(1)
 adata.var_names = expr.columns
+adata.raw = adata.copy()
 
 # remove zeros
 print("Removing unexpressed genes...")
@@ -39,28 +40,25 @@ sc.pp.filter_genes(adata, min_cells=1)
 
 # log(x+1) transform each value in matrix
 print("Log transforming...")
-adata.obsm["X_log1p"] = sc.pp.log1p(adata, copy=True).X
+sc.pp.log1p(adata)
 
-# scale only, don't center (PCA centers internally)
-print("Scaling for PCA...")
-adata.obsm["X_log1p_scaled"] = sc.pp.scale(adata, max_value=10, zero_center=False, copy=True, obsm="X_log1p").X
+# scale and center
+print("Scaling and centering...")
+sc.pp.scale(adata, max_value=10, zero_center=True)
 
 # embed data
 # PCA
-print("Running PCA (centers data internally)...")
-adata.obsm["pca"] = PCA().fit_transform(adata.obsm["X_log1p_scaled"]).astype(np.float32)
+print("Running PCA...")
+adata.obsm["pca"] = PCA().fit_transform(adata.X).astype(np.float32)
 
-# scale and center
-print("Scaling and centering for MDS, t-SNE and UMAP...")
-adata.obsm["X_log1p_standardized"] = sc.pp.scale(adata, max_value=10, zero_center=True, copy=True, obsm="X_log1p").X
 
 # MDS
 print("Running MDS...")
-adata.obsm["mds"] = MDS(normalized_stress='auto').fit_transform(adata.obsm["X_log1p_standardized"]).astype(np.float32)
+adata.obsm["mds"] = MDS(normalized_stress='auto').fit_transform(adata.X).astype(np.float32)
 
 # t-SNE
 print("Running t-SNE...")
-adata.obsm["tsne"] = TSNE().fit_transform(adata.obsm["X_log1p_standardized"]).astype(np.float32)
+adata.obsm["tsne"] = TSNE().fit_transform(adata.X).astype(np.float32)
 
 # UMAP
 print("Running UMAP...")
