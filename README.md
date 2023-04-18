@@ -55,7 +55,12 @@ To read in the embedded data, use the following code.
 ```python
 from anndata import read_h5ad
 adata = read_h5ad('data/TCGA.HNSC.embedded.h5ad')
+adata.X # log-normalized and standardized expression matrix
+adata.obs # see metadata
 adata.obsm['pca'] # PCA embedding
+adata.obsm['mds'] # MDS embedding
+adata.obsm['umap'] # UMAP embedding
+adata.obsm['tsne'] # t-SNE embedding
 ```
 
 [Anndata](https://anndata.readthedocs.io/en/latest/index.html) is a handy library for working with a data matrix and metadata. See [`./explore.ipynb`](./explore.ipynb) for how I used it.
