@@ -48,7 +48,7 @@ data/
 
 ## Analyze
 
-Create your own `{name}_analysis.ipynb` and select the python installation in `.venv` as the kernel to analyze the data
+Create your own jupyter notebook and select the python installation in `.venv` as the kernel to analyze the data
 
 To read in the embedded data, use the following code.
 
@@ -57,10 +57,10 @@ from anndata import read_h5ad
 adata = read_h5ad('data/TCGA.HNSC.embedded.h5ad')
 adata.X # log-normalized and standardized expression matrix
 adata.obs # see metadata
-adata.obsm['pca'] # PCA embedding
-adata.obsm['mds'] # MDS embedding
-adata.obsm['umap'] # UMAP embedding
-adata.obsm['tsne'] # t-SNE embedding
+adata.obsm['pca_2'] # PCA 2-component embedding
+adata.obsm['mds_2'] # MDS 2-component embedding
+adata.obsm['umap_2'] # UMAP 2-component embedding
+adata.obsm['tsne_2'] # t-SNE 2-component embedding
 ```
 
 [Anndata](https://anndata.readthedocs.io/en/latest/index.html) is a handy library for working with a data matrix and metadata. See [`./explore.ipynb`](./explore.ipynb) for how I used it.
