@@ -76,7 +76,9 @@ if __name__ == '__main__':
     # do a full PCA
     print("Embedding with full PCA...")
     adata.obsm["pca"] = PCA().fit_transform(adata.X).astype(np.float32)
-
+    adata.obsm["mds"] = MDS().fit_transform(adata.X).astype(np.float32)
+    adata.obsm["tsne"] = TSNE().fit_transform(adata.X).astype(np.float32)
+    adata.obsm["umap"] = UMAP().fit_transform(adata.X).astype(np.float32)
     # save data
     print("Saving to data/TCGA.HNSC.embedded.h5ad...")
     adata._sanitize()
