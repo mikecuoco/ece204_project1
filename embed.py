@@ -8,6 +8,7 @@ from anndata import AnnData
 from sklearn.manifold import TSNE, MDS
 from sklearn.decomposition import PCA
 from umap import UMAP
+from jackstraw.permutationPA import permutationPA
 
 def read_tcga():
 	'''
@@ -100,20 +101,29 @@ if __name__ == '__main__':
 	adata = read_tcga()
 	adata = normalize(adata)
 
+	# fully embed settings
+	adata.obsm["pca"] = PCA().fit_transform(adata.X).astype(np.float32)
+	adata.obsm["mds"] = MDS(n_components=len(adata.obs), normalized_stress='auto').fit_transform(adata.X).astype(np.float32)
+
+	# determine optimal number of PC components for tSNE and UMAP
+	rest, pval = permutationPA(adata.X)
+	print(f"Optimal number of principal components is {rest}, as determined by jackstraw permutation test.")
+	adata.uns["jackstraw_pca"] = rest
+
+	adata.obsm["tsne"] = TSNE().fit_transform(adata.obsm["pca"][:,:rest]).astype(np.float32)
+	adata.obsm["umap"] = UMAP().fit_transform(adata.obsm["pca"][:,:rest]).astype(np.float32)
+
+
+	# embed with different numbers of components
 	for nc in range(1,11):
 		print(f"Embedding with {nc} components...")
 		adata.obsm[f"pca_{nc}"] = PCA(n_components=nc).fit_transform(adata.X).astype(np.float32)
 		adata.obsm[f"mds_{nc}"] = MDS(n_components=nc, normalized_stress='auto').fit_transform(adata.X).astype(np.float32)
 		if nc <= 3:
-			adata.obsm[f"tsne_{nc}"] = TSNE(n_components=nc).fit_transform(adata.X).astype(np.float32)
-		adata.obsm[f"umap_{nc}"] = UMAP(n_components=nc).fit_transform(adata.X).astype(np.float32)
+			adata.obsm[f"tsne_{nc}"] = TSNE(n_components=nc).fit_transform(adata.obsm["pca"][:,:rest]).astype(np.float32)
+		adata.obsm[f"umap_{nc}"] = UMAP(n_components=nc).fit_transform(adata.obsm["pca"][:,:rest]).astype(np.float32)
 
-	# do a full PCA
-	print("Embedding with full PCA...")
-	adata.obsm["pca"] = PCA().fit_transform(adata.X).astype(np.float32)
-	adata.obsm["mds"] = MDS().fit_transform(adata.X).astype(np.float32)
-	adata.obsm["tsne"] = TSNE().fit_transform(adata.X).astype(np.float32)
-	adata.obsm["umap"] = UMAP().fit_transform(adata.X).astype(np.float32)
+
 	# save data
 	print("Saving to data/TCGA.HNSC.embedded.h5ad...")
 	adata._sanitize()
