@@ -7,7 +7,7 @@ Clone this repo, create a virtual python environment, and install the required p
 ```bash
 git clone https://github.com/mikecuoco/ece204_project1.git
 cd ece204_project1
-python3.9 -m venv .venv # must be python 3.9
+python -m venv .venv # must be python 3.9
 source .venv/bin/activate
 pip install -r requirements.txt
 ```
@@ -57,10 +57,10 @@ from anndata import read_h5ad
 adata = read_h5ad('data/TCGA.HNSC.embedded.h5ad')
 adata.X # log-normalized and standardized expression matrix
 adata.obs # see metadata
-adata.obsm['pca_2'] # PCA 2-component embedding
-adata.obsm['mds_2'] # MDS 2-component embedding
-adata.obsm['umap_2'] # UMAP 2-component embedding
-adata.obsm['tsne_2'] # t-SNE 2-component embedding
+adata.obsm['pca'] # PCA
+adata.obsm['mds'] # MDS
+adata.obsm['umap'] # UMAP
+adata.obsm['tsne'] # t-SNE
 ```
 
-[Anndata](https://anndata.readthedocs.io/en/latest/index.html) is a handy library for working with a data matrix and metadata. See [`./explore.ipynb`](./explore.ipynb) for how I used it.
+[Anndata](https://anndata.readthedocs.io/en/latest/index.html) is a handy library for working with a data matrix and metadata. 
