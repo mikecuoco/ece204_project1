@@ -31,20 +31,39 @@ data/
 └── TCGA.HNSC.mutations.txt
 ```
 
-## Generate the embedded data
+## Cohort summary
 
-To generate the embedded data, run the following command
+See `cohort_summary.ipynb` for a summary of the cohort.
+
+We have 545 samples from 500 individuals. All but one individual have a primary tumor sample.
+
+![](figures/age_vs_sampletype.png)
+
+Individuals with primary tumors are distributed as follows
+
+![](figures/primary_tumor_summary.png)
+
+
+## Load, normalize, and embed the data
+
+Run the following command to load, normalize, and embed the data
 
 ```bash
 python embed.py
 ```
 
-This will create the following data to the `data` directory.
+This script does the following
 
-```bash
-data/
-└── TCGA.HNSC.embedded.h5ad
-```
+1. Combines the metadata and expression data into a single [`Anndata`](https://anndata.readthedocs.io/en/latest/index.html) object. 
+2. Parses the sample codes to add `tissue_source_size` and `sample_type` to the metadata
+3. Parses the `histological_grade` column to make numerical
+4. Removes unexpressed genes 
+5. `log(x+1)` normalizes and standarizes the expression data
+6. Embed the data using a full PCA and MDS.
+7. Use jackstraw permutation test to estimate the number of useful principal components for UMAP and t-SNE
+8. Embed the data using UMAP and t-SNE on the jackstraw-determined PCs
+9. Embed the data using PCA, MDS, UMAP, and t-SNE by varying the `n_components` parameter 1-10
+10. Save the data to `data/TCGA.HNSC.embedded.h5ad`
 
 ## Analyze
 
@@ -63,4 +82,3 @@ adata.obsm['umap'] # UMAP
 adata.obsm['tsne'] # t-SNE
 ```
 
-[Anndata](https://anndata.readthedocs.io/en/latest/index.html) is a handy library for working with a data matrix and metadata. 
